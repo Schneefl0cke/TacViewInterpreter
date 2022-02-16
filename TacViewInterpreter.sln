@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TacViewKillReader", "TacViewKillReader\TacViewKillReader.csproj", "{9DE4C8F6-F636-459C-BE3B-F93748E45DE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TacViewKillReaderTests", "TacViewKillReaderTests\TacViewKillReaderTests.csproj", "{7AC42F98-335B-4A99-80F3-04A363E23D86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DE4C8F6-F636-459C-BE3B-F93748E45DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DE4C8F6-F636-459C-BE3B-F93748E45DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DE4C8F6-F636-459C-BE3B-F93748E45DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DE4C8F6-F636-459C-BE3B-F93748E45DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC42F98-335B-4A99-80F3-04A363E23D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC42F98-335B-4A99-80F3-04A363E23D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC42F98-335B-4A99-80F3-04A363E23D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC42F98-335B-4A99-80F3-04A363E23D86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DCD06D8B-2EE3-4E88-9DB4-C9BF799578A0}
+	EndGlobalSection
+EndGlobal
