@@ -23,8 +23,8 @@ namespace TacViewKillReader
 
         public void WriteKillsToExcel(List<destroyedCounter> destroyed, XLWorkbook workbook, string worksheetName)
         {
-            List<destroyedCounter> aircraft, helicopter, tanks, sam, other;
-            GetFilterLists(destroyed, out aircraft, out tanks, out sam, out other);
+            List<destroyedCounter> aircraft, tanks, sam, other;
+            GetFilterLists(destroyed, out aircraft,  out tanks, out sam, out other);
             var aircraftByCountry = FilterListByCountry(aircraft);
             var tanksByCountry = FilterListByCountry(tanks);
             var samByCountry = FilterListByCountry(sam);
@@ -36,6 +36,9 @@ namespace TacViewKillReader
             int counter = 2;
 
             counter = MakeDataEntry(aircraftByCountry, worksheet, counter);
+            counter++;
+
+            counter = MakeDataEntry(helicopterbyCountry, worksheet, counter);
             counter++;
 
             counter = MakeDataEntry(tanksByCountry, worksheet, counter);
@@ -150,7 +153,7 @@ namespace TacViewKillReader
             other = new List<destroyedCounter>();
             foreach (var entry in destroyed)
             {
-                if (entry.type == "Aircraft")
+                if (entry.type == "Aircraft" || entry.type == "Helicopter")
                 {
                     aircraft.Add(entry);
                 }
