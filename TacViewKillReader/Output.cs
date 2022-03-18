@@ -23,7 +23,7 @@ namespace TacViewKillReader
 
         public void WriteKillsToExcel(List<destroyedCounter> destroyed, XLWorkbook workbook, string worksheetName)
         {
-            List<destroyedCounter> aircraft, tanks, sam, other;
+            List<destroyedCounter> aircraft, helicopter, tanks, sam, other;
             GetFilterLists(destroyed, out aircraft, out tanks, out sam, out other);
             var aircraftByCountry = FilterListByCountry(aircraft);
             var tanksByCountry = FilterListByCountry(tanks);

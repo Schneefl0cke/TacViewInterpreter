@@ -79,6 +79,7 @@ namespace TacViewKillReader
             {
                 ReadLosses(reader);
                 FilterKills();
+                FilterMia();
             }
         }
 
