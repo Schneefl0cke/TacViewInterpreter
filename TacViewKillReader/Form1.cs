@@ -34,12 +34,14 @@ namespace TacViewKillReader
                 {
                     savePath = GetSavePath(savePath);
 
-                    var result = analyzer.AnalyzeSingleMission(filePath);
+                    analyzer.AnalyzeSingleMission(filePath);
 
-                    if (savePath != String.Empty)
+                    //readkills, readmia, readweapons
+
+                    if (savePath != string.Empty)
                     {
-                        output.CreateFile(result, savePath);
-                        output.ConvertToExcelFormat(result, savePath);
+                        //output.CreateFile(analyzer.Killed, savePath);
+                        output.WriteExcelFile(analyzer.Killed, analyzer.Mia, savePath);
                     }
                 }
             }
@@ -53,7 +55,7 @@ namespace TacViewKillReader
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            saveFileDialog1.Filter = "txt files (*.txt)|*.txt";
+            saveFileDialog1.Filter = "xlsx files (*.xlsx)|*.xlsx";
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
 
@@ -87,28 +89,28 @@ namespace TacViewKillReader
 
         private void multipleMissions_button_Click(object sender, EventArgs e)
         {
-            try
-            {
-                var savePath = string.Empty;
+            //try
+            //{
+            //    var savePath = string.Empty;
 
-                var filePaths = GetFilePaths();
-                if (filePaths.Length != 0)
-                {
-                    savePath = GetSavePath(savePath);
+            //    var filePaths = GetFilePaths();
+            //    if (filePaths.Length != 0)
+            //    {
+            //        savePath = GetSavePath(savePath);
 
-                    var result = analyzer.AnalyzeMultipleFiles(filePaths.ToList());
+            //        var result = analyzer.AnalyzeMultipleFiles(filePaths.ToList());
 
-                    if (savePath != String.Empty)
-                    {
-                        output.CreateFile(result, savePath);
-                        output.ConvertToExcelFormat(result, savePath);
-                    }
-                }
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
+            //        if (savePath != String.Empty)
+            //        {
+            //            output.CreateFile(result, savePath);
+            //            output.ConvertToExcelFormat(result, savePath);
+            //        }
+            //    }
+            //}
+            //catch (Exception error)
+            //{
+            //    MessageBox.Show(error.Message);
+            //}
         }
 
         private static string[] GetFilePaths()

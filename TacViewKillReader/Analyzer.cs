@@ -10,136 +10,155 @@ namespace TacViewKillReader
 {
     public class Analyzer
     {
-        public List<destroyedCounter> AnalyzeMultipleFiles(List<string> paths)
-        {
-            var kills = CombineMissionResults_MultipleMissions(paths);
-            var combinedKills = CombineKills_MultipleMissions(kills);
+        List<Kill> KillList = new List<Kill>();
+        List<Kill> MiaList = new List<Kill>();
 
-            return combinedKills;
+        public List<destroyedCounter> Killed = new List<destroyedCounter>();
+        public List<destroyedCounter> Mia = new List<destroyedCounter>();
+
+
+        //Analyzing of multiple files will be reworked!
+        //public List<destroyedCounter> AnalyzeMultipleFiles(List<string> paths)
+        //{
+        //    var kills = CombineMissionResults_MultipleMissions(paths);
+        //    var combinedKills = CombineKills_MultipleMissions(kills);
+
+        //    return combinedKills;
+        //}
+
+        //public List<destroyedCounter> CombineMissionResults_MultipleMissions(List<string> paths)
+        //{
+        //    var kills = new List<destroyedCounter>();
+        //    foreach (var path in paths)
+        //    {
+        //        var content = File.ReadAllText(path);
+        //        var lines = content.Split(';');
+
+        //        foreach (var line in lines)
+        //        {
+        //            var entries = line.Split(',');
+
+        //            if (entries.Length == 4)
+        //            {
+        //                var dName = entries[0].Trim();
+        //                var dCounter = Convert.ToInt32(entries[1].Trim());
+        //                var dType = entries[2].Trim();
+        //                var dCountry = entries[3].Trim();
+
+        //                kills.Add(new destroyedCounter(dName, dType, dCountry, dCounter));
+        //            }
+        //        }
+        //    }
+        //    return kills;
+        //}
+
+        //public List<destroyedCounter> CombineKills_MultipleMissions(List<destroyedCounter> kills)
+        //{
+        //    var combinedKills = new List<destroyedCounter>();
+        //    foreach (var kill in kills)
+        //    {
+        //        var destroyedEntry = combinedKills.FirstOrDefault(x => x.name == kill.name && x.country == kill.country);
+        //        if (destroyedEntry == null)
+        //        {
+        //            combinedKills.Add(kill);
+        //        }
+        //        else
+        //        {
+        //            destroyedEntry.counter += kill.counter;
+        //        }
+        //    }
+        //    return combinedKills;
+        //}
+
+        public void AnalyzeSingleMission(string path)
+        {
+            KillList = new List<Kill>();
+            MiaList = new List<Kill>();
+
+            using (XmlReader reader = XmlReader.Create(path))
+            {
+                ReadLosses(reader);
+                FilterKills();
+            }
         }
 
-        public List<destroyedCounter> CombineMissionResults_MultipleMissions (List<string> paths)
+        public void ReadLosses(XmlReader reader)
         {
-            var kills = new List<destroyedCounter>();
-            foreach (var path in paths)
+            reader.ReadToFollowing("Event");
+
+            do
             {
-                var content = File.ReadAllText(path);
-                var lines = content.Split(';');
+                string killerAircraft = "";
+                string killerPilot = "";
+                string killerCountry = "";
 
-                foreach (var line in lines)
+                reader.MoveToFirstAttribute();
+
+                //Primary
+                reader.ReadToFollowing("Type");
+                var destroyedType = reader.ReadElementContentAsString().Trim();
+                reader.ReadToFollowing("Name");
+                var destroyedName = reader.ReadElementContentAsString().Trim();
+                reader.ReadToFollowing("Country");
+                var destroyedCountry = reader.ReadElementContentAsString().Trim();
+
+                reader.ReadToFollowing("Action");
+                var data = reader.ReadElementContentAsString();
+                if (data == "HasBeenDestroyed" && destroyedType != "Missile" && destroyedType != "Parachutist")
                 {
-                    var entries = line.Split(',');
-
-                    if (entries.Length == 4)
+                    reader.MoveToContent();
+                    if (reader.LocalName == "SecondaryObject")
                     {
-                        var dName = entries[0].Trim();
-                        var dCounter = Convert.ToInt32(entries[1].Trim());
-                        var dType = entries[2].Trim();
-                        var dCountry = entries[3].Trim();
+                        reader.ReadToFollowing("Name");
+                        killerAircraft = reader.ReadElementContentAsString().Trim();
+                        reader.ReadToFollowing("Pilot");
+                        killerPilot = reader.ReadElementContentAsString().Trim();
+                        reader.ReadToFollowing("Country");
+                        killerCountry = reader.ReadElementContentAsString().Trim();
 
-                        kills.Add(new destroyedCounter(dName, dType, dCountry, dCounter));
+                        KillList.Add(new Kill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry));
+                    }
+                    else
+                    {
+                        MiaList.Add(new Kill("", "", "", destroyedType, destroyedName, destroyedCountry));
                     }
                 }
             }
-            return kills;
+            while (reader.ReadToFollowing("Event"));
         }
 
-        public List<destroyedCounter> CombineKills_MultipleMissions(List<destroyedCounter> kills)
+        public void FilterKills()
         {
-            var combinedKills = new List<destroyedCounter>();
-            foreach (var kill in kills)
+            foreach (var kill in KillList)
             {
-                var destroyedEntry = combinedKills.FirstOrDefault(x => x.name == kill.name && x.country == kill.country);
-                if (destroyedEntry == null)
-                {
-                    combinedKills.Add(kill);
-                }
-                else
-                {
-                    destroyedEntry.counter += kill.counter;
-                }
-            }
-            return combinedKills;
-        }
-
-        public List<destroyedCounter> AnalyzeSingleMission (string path)
-        {
-            var kills = GetKills(path);
-            return FilterKills(kills);
-        }
-
-        public List<Kill> GetKills(string path)
-        {
-            var killList = new List<Kill>();
-            var miaList = new List<Kill>();
-
-            using(XmlReader reader = XmlReader.Create(path))
-            {
-                reader.ReadToFollowing("Event");
-                
-                do 
-                {
-                    string killerAircraft = "";
-                    string killerPilot = "";
-                    string killerCountry = "";
-
-                    reader.MoveToFirstAttribute();
-
-                    //Primary
-                    reader.ReadToFollowing("Type");
-                    var destroyedType = reader.ReadElementContentAsString().Trim();
-                    reader.ReadToFollowing("Name");
-                    var destroyedName = reader.ReadElementContentAsString().Trim();
-                    reader.ReadToFollowing("Country");
-                    var destroyedCountry = reader.ReadElementContentAsString().Trim();
-
-                    reader.ReadToFollowing("Action");
-                    var data = reader.ReadElementContentAsString();
-                    if (data == "HasBeenDestroyed" && destroyedType != "Missile" && destroyedType != "Parachutist")
-                    {
-                        reader.MoveToContent();
-                        if (reader.LocalName == "SecondaryObject")
-                        {
-                            reader.ReadToFollowing("Name");
-                            killerAircraft = reader.ReadElementContentAsString().Trim();
-                            reader.ReadToFollowing("Pilot");
-                            killerPilot = reader.ReadElementContentAsString().Trim();
-                            reader.ReadToFollowing("Country");
-                            killerCountry = reader.ReadElementContentAsString().Trim();
-
-                            killList.Add(new Kill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry));
-                        }
-                        else
-                        {
-                            miaList.Add(new Kill("", "", "", destroyedType, destroyedName, destroyedCountry));
-                        }
-                    }
-                }
-                while (reader.ReadToFollowing("Event")); 
-            }
-
-            return killList;
-        }
-
-        public List<destroyedCounter> FilterKills(List<Kill> killList)
-        {
-            var destroyedList = new List<destroyedCounter>();
-
-            foreach (var kill in killList)
-            {
-                var destroyedEntry = destroyedList.FirstOrDefault(x => x.name == kill.destroyedName && x.country == kill.destroyedCountry);
+                var destroyedEntry = Killed.FirstOrDefault(x => x.name == kill.destroyedName && x.country == kill.destroyedCountry);
 
                 if (destroyedEntry == null)
                 {
-                    destroyedList.Add(new destroyedCounter(kill.destroyedName, kill.destroyedType, kill.destroyedCountry));
+                    Killed.Add(new destroyedCounter(kill.destroyedName, kill.destroyedType, kill.destroyedCountry));
                 }
                 else
                 {
                     destroyedEntry.counter++;
                 }
             }
+        }
 
-            return destroyedList;
+        public void FilterMia()
+        {
+            foreach (var mia in MiaList)
+            {
+                var destroyedEntry = Mia.FirstOrDefault(x => x.name == mia.destroyedName && x.country == mia.destroyedCountry);
+
+                if (destroyedEntry == null)
+                {
+                    Mia.Add(new destroyedCounter(mia.destroyedName, mia.destroyedType, mia.destroyedCountry));
+                }
+                else
+                {
+                    destroyedEntry.counter++;
+                }
+            }
         }
     }
 }

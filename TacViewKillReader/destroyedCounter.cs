@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TacViewKillReader
 {
+    /// <summary>
+    /// for combining files
+    /// </summary>
     public class destroyedCounter
     {
         public int counter;

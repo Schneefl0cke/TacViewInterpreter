@@ -11,27 +11,27 @@ namespace TacViewKillReader.Tests
     [TestClass()]
     public class AnalyzerTests
     {
-        [TestMethod()]
-        public void AnalyzeTest()
-        {
-            var path = "D:\\Desktop\\Tacview.xml";
-            var analyzer = new Analyzer();
+        //[TestMethod()]
+        //public void AnalyzeTest()
+        //{
+        //    var path = "D:\\Desktop\\Tacview.xml";
+        //    var analyzer = new Analyzer();
 
-            var kills = analyzer.GetKills(path);
-            var filteredKills = analyzer.FilterKills(kills);
+        //    var kills = analyzer.ReadLoss(path);
+        //    var filteredKills = analyzer.FilterKills(kills);
 
-            var output = new Output();
-            output.CreateFile(filteredKills, "D:\\Desktop\\Modern Campaign\\Analyzing\\test.txt");
-            //Assert.Fail();
-        }
+        //    var output = new Output();
+        //    output.CreateFile(filteredKills, "D:\\Desktop\\Modern Campaign\\Analyzing\\test.txt");
+        //    //Assert.Fail();
+        //}
 
-        [TestMethod()]
-        public void CombineMissionResults()
-        {
-            var path = "D:\\Desktop\\Modern Campaign\\Analyzing\\test.txt";
-            var analyzer = new Analyzer();
+        //[TestMethod()]
+        //public void CombineMissionResults()
+        //{
+        //    var path = "D:\\Desktop\\Modern Campaign\\Analyzing\\test.txt";
+        //    var analyzer = new Analyzer();
 
-            var result = analyzer.AnalyzeMultipleFiles(new List<string>() {path });
-        }
+        //    var result = analyzer.AnalyzeMultipleFiles(new List<string>() {path });
+        //}
     }
 }
