@@ -1,10 +1,7 @@
 # TacViewInterpreter
 
-This is a quick and dirty solution to read TacView Flightlog files and sort them.
-It will create a .txt and a .xls file containing all casualties caused by weapons. The casualties are sorted by type (aircraft, SAM, tanks, etc.) and grouped by country.
+This programs aims to generate statistics about your DCS mission.
+To use it, you need TacView and export the flight log.
+The programm will create a .xls file containing all KIA caused by weapons, and MIA (accidents). The casualties are sorted by type (aircraft, SAM, tanks, etc.) and grouped by country. Things killed by players and players killed are also listed.
 
-The created .txt files can be added together to generate a new report, so you can keep track of the losses in a campaign.
-
-TODO:
-1. Add losses not caused by weapons
-2. Add information about weapons used
+I will not make a highscore list about which player killed the most or K/D ratios. My flying philosophy is, that the mission comes always first, going home second and kills last.
