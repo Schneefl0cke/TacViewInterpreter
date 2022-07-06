@@ -11,17 +11,21 @@ namespace TacViewKillReader
     /// </summary>
     public class destroyedCounter
     {
-        public int counter;
+        public int destroyedInMission;
+        public int destroyedByPlayers;
+        public int playerLosses;
         public string name;
         public string type;
         public string country;
 
-        public destroyedCounter(string name, string type, string country, int counter = 1)
+        public destroyedCounter(string name, string type, string country)
         {
+            destroyedInMission = 1;
+            destroyedByPlayers = 0;
+            playerLosses = 0;
             this.name = name;
             this.type = type;
             this.country = country;
-            this.counter = counter;
         }
     }
 }

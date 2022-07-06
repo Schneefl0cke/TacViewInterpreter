@@ -92,6 +92,7 @@ namespace TacViewKillReader
                 string killerAircraft = "";
                 string killerPilot = "";
                 string killerCountry = "";
+                bool squadronKill = false;
 
                 reader.MoveToFirstAttribute();
 
@@ -100,6 +101,8 @@ namespace TacViewKillReader
                 var destroyedType = reader.ReadElementContentAsString().Trim();
                 reader.ReadToFollowing("Name");
                 var destroyedName = reader.ReadElementContentAsString().Trim();
+                reader.ReadToFollowing("Pilot");
+                var wasPlayer = reader.ReadElementContentAsString().Trim().Contains('|');
                 reader.ReadToFollowing("Country");
                 var destroyedCountry = reader.ReadElementContentAsString().Trim();
 
@@ -114,14 +117,15 @@ namespace TacViewKillReader
                         killerAircraft = reader.ReadElementContentAsString().Trim();
                         reader.ReadToFollowing("Pilot");
                         killerPilot = reader.ReadElementContentAsString().Trim();
+                        squadronKill = killerPilot.Contains('|');
                         reader.ReadToFollowing("Country");
                         killerCountry = reader.ReadElementContentAsString().Trim();
 
-                        KillList.Add(new Kill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry));
+                        KillList.Add(new Kill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
                     }
                     else
                     {
-                        MiaList.Add(new Kill("", "", "", destroyedType, destroyedName, destroyedCountry));
+                        MiaList.Add(new Kill("", "", "", destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
                     }
                 }
             }
@@ -140,10 +144,29 @@ namespace TacViewKillReader
                 }
                 else
                 {
-                    destroyedEntry.counter++;
+                    destroyedEntry.destroyedInMission++;
+                }
+
+                destroyedEntry = Killed.FirstOrDefault(x => x.name == kill.destroyedName && x.country == kill.destroyedCountry);
+                if (kill.squadronkill)
+                {
+                    destroyedEntry.destroyedByPlayers++;
+                }
+                if (kill.wasPlayer)
+                {
+                    destroyedEntry.playerLosses++;
                 }
             }
         }
+
+        //private void CountPlayerKillsAndLosses()
+        //{
+        //    foreach (var entry in KillList)
+        //    {
+        //        var destroyedEntry = Killed.FirstOrDefault(x => x.name == entry.destroyedName && x.country == entry.destroyedCountry);
+
+        //    }
+        //}
 
         public void FilterMia()
         {
@@ -157,7 +180,13 @@ namespace TacViewKillReader
                 }
                 else
                 {
-                    destroyedEntry.counter++;
+                    destroyedEntry.destroyedInMission++;
+                }
+
+                destroyedEntry = Mia.FirstOrDefault(x => x.name == mia.destroyedName && x.country == mia.destroyedCountry);
+                if (mia.wasPlayer)
+                {
+                    destroyedEntry.playerLosses++;
                 }
             }
         }

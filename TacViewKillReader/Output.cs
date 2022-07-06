@@ -38,9 +38,6 @@ namespace TacViewKillReader
             counter = MakeDataEntry(aircraftByCountry, worksheet, counter);
             counter++;
 
-            counter = MakeDataEntry(helicopterbyCountry, worksheet, counter);
-            counter++;
-
             counter = MakeDataEntry(tanksByCountry, worksheet, counter);
             counter++;
 
@@ -55,14 +52,20 @@ namespace TacViewKillReader
             worksheet.Cell("A1").Value = "Name";
             worksheet.Cell("A1").Style.Font.Bold = true;
 
-            worksheet.Cell("B1").Value = "Verluste";
+            worksheet.Cell("B1").Value = "Losses";
             worksheet.Cell("B1").Style.Font.Bold = true;
 
-            worksheet.Cell("C1").Value = "Land";
+            worksheet.Cell("C1").Value = "Country";
             worksheet.Cell("C1").Style.Font.Bold = true;
 
-            worksheet.Cell("D1").Value = "Typ";
+            worksheet.Cell("D1").Value = "Type";
             worksheet.Cell("D1").Style.Font.Bold = true;
+
+            worksheet.Cell("E1").Value = "Player losses";
+            worksheet.Cell("E1").Style.Font.Bold = true;
+
+            worksheet.Cell("F1").Value = "Killed by players";
+            worksheet.Cell("F1").Style.Font.Bold = true;
         }
 
         private static int MakeDataEntry(List<List<destroyedCounter>> typeList, IXLWorksheet worksheet, int counter)
@@ -70,20 +73,32 @@ namespace TacViewKillReader
             for (int i = 0; i < typeList.Count; i++)
             {
                 int casualties = 0;
+                int playerCasualties = 0;
+                int killedByPlayers = 0;
+
                 foreach (var entry in typeList[i])
                 {
                     worksheet.Cell("A" + counter).Value = entry.name;
-                    worksheet.Cell("B" + counter).Value = entry.counter;
+                    worksheet.Cell("B" + counter).Value = entry.destroyedInMission;
                     worksheet.Cell("C" + counter).Value = entry.country;
                     worksheet.Cell("D" + counter).Value = entry.type;
+                    worksheet.Cell("E" + counter).Value = entry.playerLosses;
+                    worksheet.Cell("F" + counter).Value = entry.destroyedByPlayers;
                     counter++;
-                    casualties += entry.counter;
+                    casualties += entry.destroyedInMission;
+                    playerCasualties += entry.playerLosses;
+                    killedByPlayers += entry.destroyedByPlayers;
                 }
 
                 worksheet.Cell("A" + counter).Value = "Gesamt";
                 worksheet.Cell("A" + counter).Style.Font.Bold = true;
 
                 worksheet.Cell("B" + counter).Value = casualties;
+                worksheet.Cell("B" + counter).Style.Font.Bold = true;
+                worksheet.Cell("E" + counter).Value = playerCasualties;
+                worksheet.Cell("E" + counter).Style.Font.Bold = true;
+                worksheet.Cell("F" + counter).Value = killedByPlayers;
+                worksheet.Cell("F" + counter).Style.Font.Bold = true;
 
                 counter++;
                 counter++;

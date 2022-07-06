@@ -16,7 +16,10 @@ namespace TacViewKillReader
         public string destroyedName;
         public string destroyedCountry;
 
-        public Kill(string killerAircraft, string killerPilot, string killerCountry, string destroyedType, string destroyedName, string destroyedCountry)
+        public bool wasPlayer;
+        public bool squadronkill;
+
+        public Kill(string killerAircraft, string killerPilot, string killerCountry, string destroyedType, string destroyedName, string destroyedCountry, bool squadronkill, bool wasPlayer)
         {
             this.killerAircraft = killerAircraft;
             this.killerPilot = killerPilot;
@@ -25,6 +28,9 @@ namespace TacViewKillReader
             this.destroyedType = destroyedType;
             this.destroyedName = destroyedName;
             this.destroyedCountry = destroyedCountry;
+
+            this.squadronkill = squadronkill;
+            this.wasPlayer = wasPlayer;
         }
     }
 }
