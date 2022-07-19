@@ -1,6 +1,6 @@
 ﻿namespace TacViewKillReader
 {
-    public class Kill
+    public class XmlReadKill
     {
         public string killerAircraft;
         public string killerPilot;
@@ -13,7 +13,7 @@
         public bool wasPlayer;
         public bool squadronkill;
 
-        public Kill(string killerAircraft, string killerPilot, string killerCountry, string destroyedType, string destroyedName, string destroyedCountry, bool squadronkill, bool wasPlayer)
+        public XmlReadKill(string killerAircraft, string killerPilot, string killerCountry, string destroyedType, string destroyedName, string destroyedCountry, bool squadronkill, bool wasPlayer)
         {
             this.killerAircraft = killerAircraft;
             this.killerPilot = killerPilot;

@@ -6,8 +6,8 @@ namespace TacViewKillReader
 {
     public class Analyzer
     {
-        List<Kill> KillList = new List<Kill>();
-        List<Kill> MiaList = new List<Kill>();
+        List<XmlReadKill> XmlKills = new List<XmlReadKill>();
+        List<XmlReadKill> MiaList = new List<XmlReadKill>();
 
         public List<destroyedCounter> Killed = new List<destroyedCounter>();
         public List<destroyedCounter> Mia = new List<destroyedCounter>();
@@ -68,8 +68,8 @@ namespace TacViewKillReader
 
         public void AnalyzeSingleMission(string path)
         {
-            KillList = new List<Kill>();
-            MiaList = new List<Kill>();
+            XmlKills = new List<XmlReadKill>();
+            MiaList = new List<XmlReadKill>();
 
             using (XmlReader reader = XmlReader.Create(path))
             {
@@ -117,11 +117,11 @@ namespace TacViewKillReader
                         reader.ReadToFollowing("Country");
                         killerCountry = reader.ReadElementContentAsString().Trim();
 
-                        KillList.Add(new Kill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
+                        XmlKills.Add(new XmlReadKill(killerAircraft, killerPilot, killerCountry, destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
                     }
                     else
                     {
-                        MiaList.Add(new Kill("", "", "", destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
+                        MiaList.Add(new XmlReadKill("", "", "", destroyedType, destroyedName, destroyedCountry, squadronKill, wasPlayer));
                     }
                 }
             }
@@ -130,25 +130,25 @@ namespace TacViewKillReader
 
         public void FilterKills()
         {
-            foreach (var kill in KillList)
+            foreach (var xmlKill in XmlKills)
             {
-                var destroyedEntry = Killed.FirstOrDefault(x => x.name == kill.destroyedName && x.country == kill.destroyedCountry);
+                var destroyedEntry = Killed.FirstOrDefault(x => x.name == xmlKill.destroyedName && x.country == xmlKill.destroyedCountry);
 
                 if (destroyedEntry == null)
                 {
-                    Killed.Add(new destroyedCounter(kill.destroyedName, kill.destroyedType, kill.destroyedCountry));
+                    Killed.Add(new destroyedCounter(xmlKill.destroyedName, xmlKill.destroyedType, xmlKill.destroyedCountry));
                 }
                 else
                 {
                     destroyedEntry.destroyedInMission++;
                 }
 
-                destroyedEntry = Killed.FirstOrDefault(x => x.name == kill.destroyedName && x.country == kill.destroyedCountry);
-                if (kill.squadronkill)
+                destroyedEntry = Killed.FirstOrDefault(x => x.name == xmlKill.destroyedName && x.country == xmlKill.destroyedCountry);
+                if (xmlKill.squadronkill)
                 {
                     destroyedEntry.destroyedByPlayers++;
                 }
-                if (kill.wasPlayer)
+                if (xmlKill.wasPlayer)
                 {
                     destroyedEntry.playerLosses++;
                 }
@@ -157,7 +157,7 @@ namespace TacViewKillReader
 
         //private void CountPlayerKillsAndLosses()
         //{
-        //    foreach (var entry in KillList)
+        //    foreach (var entry in XmlKills)
         //    {
         //        var destroyedEntry = Killed.FirstOrDefault(x => x.name == entry.destroyedName && x.country == entry.destroyedCountry);
 
